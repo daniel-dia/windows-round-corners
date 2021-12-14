@@ -14,10 +14,9 @@ const defaults = {
     width: size,
     height: size,
     type: 'toolbar'
-
 }
 
-const createWindow = (display, l, c) => {
+const createWindows = (display, l, c) => {
 
     const { x, y, width, height } = display.bounds
 
@@ -27,7 +26,6 @@ const createWindow = (display, l, c) => {
         y: y + c * (height - size)
     })
     win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-
     win.setIgnoreMouseEvents(true)
     win.setSkipTaskbar(true);
     win.setAlwaysOnTop(true, "normal");
@@ -41,9 +39,9 @@ const createWindow = (display, l, c) => {
 app.whenReady().then(() => {
     const displays = screen.getAllDisplays();
     for (const display of displays) {
-        createWindow(display, 0, 0)
-        createWindow(display, 1, 0)
-        createWindow(display, 0, 1)
-        createWindow(display, 1, 1)
+        createWindows(display, 0, 0)
+        createWindows(display, 1, 0)
+        createWindows(display, 0, 1)
+        createWindows(display, 1, 1)
     }
 })
