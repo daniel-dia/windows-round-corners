@@ -1,5 +1,5 @@
 const { app, BrowserWindow, screen } = require('electron')
-const size = 10;
+const size = 16;
 
 const defaults = {
     titleBarStyle: 'hidden',
@@ -17,11 +17,15 @@ const defaults = {
 
 }
 
-const createWindow = (x, y) => {
-    const primaryDisplay = screen.getPrimaryDisplay()
-    const { width, height } = primaryDisplay.size
+const createWindow = (display, l, c) => {
 
-    const win = new BrowserWindow({ ...defaults, x: x * (width - size), y: y * (height - size) })
+    const { x, y, width, height } = display.bounds
+
+    const win = new BrowserWindow({
+        ...defaults,
+        x: x + l * (width - size),
+        y: y + c * (height - size)
+    })
     win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
     win.setIgnoreMouseEvents(true)
@@ -29,16 +33,17 @@ const createWindow = (x, y) => {
     win.setAlwaysOnTop(true, "normal");
     win.setFullScreenable(true);
     win.setMinimizable(false);
-    win.loadFile('index' + x + y + '.html')
+    win.loadFile('index' + l + c + '.html')
 
     setInterval(() => { win.moveTop(); }, 200);
 }
 
 app.whenReady().then(() => {
-
-
-    createWindow(0, 0)
-    createWindow(1, 0)
-    createWindow(0, 1)
-    createWindow(1, 1)
+    const displays = screen.getAllDisplays();
+    for (const display of displays) {
+        createWindow(display, 0, 0)
+        createWindow(display, 1, 0)
+        createWindow(display, 0, 1)
+        createWindow(display, 1, 1)
+    }
 })
